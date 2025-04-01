@@ -1,4 +1,4 @@
-module ZipCodeRadius
+module github.com/thomhuang/ZipCodesByRadius
 
 go 1.23.7
 
