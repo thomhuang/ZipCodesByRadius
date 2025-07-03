@@ -9,7 +9,7 @@ import (
 )
 
 func getPostalCodeGeography() (response Response, err error) {
-	// Download the file, always get latest, don't cache
+	// Download the file, always get latest, don't cache from `https://download.geonames.org/export/zip/US.zip`
 	resp, err := http.Get("https://download.geonames.org/export/zip/US.zip")
 	if err != nil {
 		logger.Append(fmt.Sprintf("could not download zipcode data: %s\n", err.Error()))

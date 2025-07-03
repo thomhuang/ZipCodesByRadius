@@ -1,1 +1,2 @@
+Time Taken:4.1471365s
 Outputted file successfully

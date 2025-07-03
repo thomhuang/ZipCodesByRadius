@@ -4,10 +4,12 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/dhconnelly/rtreego"
 	"io"
 	"os"
 	"strconv"
+	"time"
+
+	"github.com/dhconnelly/rtreego"
 )
 
 // Create Item within RTree for a given Geography
@@ -77,7 +79,7 @@ func processPostalCodeFile(reader io.Reader) []Geography {
 	return postalCodes
 }
 
-func OutputResults(zipMap map[string][]string) {
+func OutputResults(zipMap map[string]string, timeTaken time.Duration) {
 	jsonData, err := json.MarshalIndent(zipMap, "", "  ")
 	if err != nil {
 		logger.Append(fmt.Sprintf("could not serialize zipcode json data: %s\n", err.Error()))
@@ -99,6 +101,7 @@ func OutputResults(zipMap map[string][]string) {
 		return
 	}
 
+	logger.Append(fmt.Sprintf("Time Taken:%s", timeTaken))
 	logger.Append("Outputted file successfully")
 
 	OutputLogFile()

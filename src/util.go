@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/dhconnelly/rtreego"
 	"os"
 	"strings"
+
+	"github.com/dhconnelly/rtreego"
 )
 
 func OutputLogFile() {

@@ -1,16 +1,20 @@
 package main
 
 import (
-	"github.com/dhconnelly/rtreego"
-	"github.com/umahmood/haversine"
 	"math"
 	"runtime"
+	"strings"
 	"sync"
+	"time"
+
+	"github.com/dhconnelly/rtreego"
+	"github.com/umahmood/haversine"
 )
 
 var logger Logger
 
 func main() {
+	start := time.Now()
 	fileContents, err := getPostalCodeGeography()
 	if err != nil {
 		OutputLogFile()
@@ -32,7 +36,7 @@ func main() {
 		rt.create(p, postalCodeMap)
 	}
 
-	numWorkers := runtime.NumCPU() * 4 // Start with 4x cores for I/O bound work
+	numWorkers := runtime.NumCPU() * 4
 
 	var wg sync.WaitGroup
 	// prevent blocking when there's a temporary imbalance between producers and consumers
@@ -40,7 +44,7 @@ func main() {
 	results := make(chan Pair, numWorkers*2)
 
 	// Launch worker goroutines
-	for i := 0; i < numWorkers; i++ {
+	for range numWorkers {
 		wg.Add(1)
 
 		// goroutine to find intersection
@@ -99,10 +103,11 @@ func main() {
 	}()
 
 	// Collect results
-	zipMap := make(map[string][]string)
+	zipMap := make(map[string]string)
 	for res := range results {
-		zipMap[res.ZipCode] = res.NearbyZipCodes
+		zipMap[res.ZipCode] = strings.Join(res.NearbyZipCodes, ",")
 	}
 
-	OutputResults(zipMap)
+	end := time.Since(start)
+	OutputResults(zipMap, end)
 }
